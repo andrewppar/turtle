@@ -1,7 +1,7 @@
 import java.util.* ; 
 
 public class StatementIndex { 
-  private LinkedList<Statement> store ; 
+  public LinkedList<Statement> store ; 
   public  HashMap<Integer,HashMap<String,LinkedList<Statement>>> index  ; 
 
   public void main (String [] args) { 

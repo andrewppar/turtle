@@ -19,10 +19,10 @@ public class Statement {
      System.out.println(s1.predicate) ;  
   }
 
-  public void show(Statement statement) { 
-    String subject   = statement.subject ; 
-    String predicate = statement.predicate ; 
-    String object    = statement.object ; 
+  public void show() { 
+    String subject   = this.subject ; 
+    String predicate = this.predicate ; 
+    String object    = this.object ; 
     System.out.println(subject + " " + predicate + " " + object + ".") ; 
   }
 
