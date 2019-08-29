@@ -4,23 +4,28 @@ public class StatementIndex {
   public LinkedList<Statement> store ; 
   public  HashMap<Integer,HashMap<String,LinkedList<Statement>>> index  ; 
 
-  public void main (String [] args) { 
-    StatementIndex index = new StatementIndex () ; 
-    System.out.println ("Initializing Statement Store...") ; 
-    index.initializeStore () ; 
-    System.out.println ("Statement Store Initialized") ; 
-    System.out.println("Initializing Statement Index...") ; 
-    index.initializeIndex () ; 
-    System.out.println("Statement Index Initialized") ; 
-  }
+//  public void main (String [] args) { 
+//    StatementIndex index = new StatementIndex () ; 
+//    System.out.println ("Initializing Statement Store...") ; 
+//    index.initializeStore () ; 
+//    System.out.println ("Statement Store Initialized") ; 
+//    System.out.println("Initializing Statement Index...") ; 
+//    index.initializeIndex () ; 
+//    System.out.println("Statement Index Initialized") ; 
+//  }
 
-  public void start () { 
+  public void initialize () { 
     System.out.println ("Initializing Statement Store...") ; 
     this.initializeStore () ; 
     System.out.println ("Statement Store Initialized") ; 
     System.out.println("Initializing Statement Index...") ; 
     this.initializeIndex () ; 
     System.out.println("Statement Index Initialized") ; 
+    System.out.println("") ;
+  }
+
+  public int statementCount () { 
+    return this.store.size()  ; 
   }
 
   private void initializeIndex () { 
