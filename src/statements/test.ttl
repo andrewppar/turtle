@@ -1,0 +1,14 @@
+prefix test:<http://test.com/>
+prefix owl:<http://open_shit.com/>
+
+test:Dog  a  owl:Class .  
+test:Small a owl:Class . 
+
+test:Penny  a test:Dog , test:Small . 
+
+test:Winston a  test:Dog ;
+                         test:playsWith test:Penny .  
+
+test:playsWith a owl:Property ; 
+                            <http://rdfs.com/domain> test:Dog ; 
+                            <http://rdfs.com/range> test:Dog .  
