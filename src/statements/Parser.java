@@ -145,12 +145,13 @@ public class Parser {
 
 
   private void update_current_uri (Character character, StatementIndex statement_index) { 
+    //System.out.println(this.current_item) ;
     this.current_item = this.current_item + character ; 
     if (character == '>' ) {
       this.update_parser_with_uri(character,statement_index) ; 
       this.within_uri=false  ;
-      //        System.out.println("IN") ; 
-      //        System.out.println(current_item) ; 
+        //      System.out.println("IN") ; 
+          //    System.out.println(this.current_item) ; 
 
     }
   }
@@ -180,35 +181,43 @@ public class Parser {
       statement.addArgs(this.current_subject, this.current_predicate, this.current_object) ; 
       //System.out.println("Adding Statemetn in UPDATE"); 
       //System.out.println(statement); 
-      statement_index.addStatement(statement) ; 
+      Boolean statement_added = statement_index.addStatement(statement) ; 
       this.reset(character) ; 
     }
   }
 
   private void update_prefix_state (Character character, StatementIndex statement_index ) {  
+//    System.out.println("HERE " + character) ;
+//    System.out.println(this.current_item) ;
+//    System.out.println(this.prefix_dictionary) ;
     if (this.current_item.equals("a") && character == ' ')  { 
       this.update_parser_with_uri(character,statement_index ) ; 
       this.within_prefix = false ; 
     } 
     else if ( character == ':' )  { 
+  //    System.out.println(":") ;
       String expansion = this.prefix_dictionary.get(this.current_item) ; 
       String real_prefix =  expansion.substring(0, (expansion.length() - 1)) ; 
       this.within_prefix  = false ; 
       this.current_item = real_prefix ; 
     }
     else if ( character == '.' || character == '\n' ) { 
+    //  System.out.println("errorish case") ;
+
       //This is kind of an error case, maybe 
       //we should throw an error here.
       this.within_prefix = false ; 
       this.current_item = "" ; 
     }
     else if (character == ' ' ) { 
-      this.current_item = this.current_item + '>' ; 
+      //System.out.println("space case") ;
+      this.current_item = this.current_item  + '>' ;
       this.add_entry_to_state(this.current_item) ; 
       this.current_item = ""  ; 
       this.within_prefix = false ; 
     }
     else { 
+      //System.out.println("cont") ;
       this.current_item = this.current_item + character   ; 
     } 
   } 

@@ -1,5 +1,5 @@
 prefix test:<http://test.com/>
-prefix owl:<http://open_shit.com/>
+prefix owl:<http://www.w3.org/2002/07/owl#>
 
 test:Dog  a  owl:Class .  
 test:Small a owl:Class . 
@@ -12,3 +12,7 @@ test:Winston a  test:Dog ;
 test:playsWith a owl:Property ; 
                             <http://rdfs.com/domain> test:Dog ; 
                             <http://rdfs.com/range> test:Dog .  
+
+test:Dog owl:subClassOf test:Mammal . 
+test:Mammal owl:subClassOf test:Animal . 
+owl:Property owl:subClassOf owl:Thing .

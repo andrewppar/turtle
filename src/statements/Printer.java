@@ -47,7 +47,7 @@ public class Printer {
       HashMap.Entry prefix_entry = (Map.Entry)prefix_iterator.next() ; 
       String prefix_key = ((String) prefix_entry.getValue ()) ; 
       String prefix_value = ((String) prefix_entry.getKey ()) ; 
-      System.out.println("prefix " + prefix_key + ":" + prefix_value + "> . " ) ;
+      System.out.println("prefix " + prefix_key + ":" + prefix_value + " . " ) ;
 
     }
     System.out.println(" ") ; 
@@ -68,6 +68,7 @@ public class Printer {
       String subject = ((String) subject_entry.getKey ()); 
       LinkedList<Statement> subject_indexed_statements = ((LinkedList<Statement>)subject_entry.getValue()) ; 
       HashMap predicate_index_for_subject = new HashMap<String,LinkedList<Statement>> () ; 
+      //Populate the predicate_index_for_suject @todo put this in it's own method.
       for (int i = 0; i <  subject_indexed_statements.size(); i++) { 
         Statement statement = subject_indexed_statements.get(i)   ; 
         String pred = statement.predicate ;
@@ -90,12 +91,15 @@ public class Printer {
         //Looping through predicates
         HashMap.Entry predicate_entry =  (Map.Entry)predicate_iterator.next() ; 
         String predicate = ((String)predicate_entry.getKey()); 
+//        System.out.println("HERE") ; 
+//        System.out.println(predicate) ;
         LinkedList<Statement> predicate_indexed_statements = ((LinkedList<Statement>)predicate_entry.getValue()); 
         if (count == 0 ) { 
           this.potentiallyPrintStringWithPrefixes(predicate, prefix_uris, prefix_dictionary) ; 
         }
         else { 
           System.out.format("%"+spaces+"s", ""); 
+          System.out.print(predicate + " ") ;
         } 
         for (int i = 0 ; i < predicate_indexed_statements.size(); i++) { 
           Statement statement = predicate_indexed_statements.get(i) ; 

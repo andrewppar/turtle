@@ -15,10 +15,29 @@ public class Test {
     String ttl = trial.readFileToString("test.ttl") ; 
     Parser parser =  new Parser() ; 
     parser.parse(ttl,statement_index); 
+
     ArrayList<String> prefix_statements = new ArrayList<String> () ;
-    prefix_statements.add("test:<http://test.com/") ;
-    prefix_statements.add("owl:<http://open_shit.com/") ; 
+    prefix_statements.add("test:<http://test.com/>") ;
+    prefix_statements.add("owl:<http://www.w3.org/2002/07/owl#>") ; 
+
+    System.out.println(subject_index) ; 
+    LinkedList<Statement> winnie = subject_index.get("<http://test.com/Winston>") ; 
+    for ( int i = 0 ; i < winnie.size() ; i++) { 
+      Statement statement = winnie.get(i) ; 
+      statement.show() ;
+
+    }
+
+        
     Printer printer = new Printer () ; 
+    printer.printIndexWithPrefixes(statement_index,prefix_statements) ; 
+
+
+    ForwardInferenceEngine forward_inference_engine = new ForwardInferenceEngine () ;
+    forward_inference_engine.performForwardInference(statement_index) ;
+
+
+
     printer.printIndexWithPrefixes(statement_index,prefix_statements) ; 
     //System.out.println(subject_index) ; 
     //System.out.println(predicate_index) ; 
