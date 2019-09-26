@@ -1,7 +1,7 @@
 @prefix test:<http://test.com/> .
 @prefix owl:<http://www.w3.org/2002/07/owl#> . 
 @prefix rdfs:<http://www.w3.org/2000/01/rdf-schema#> . 
-@prefix xsd:<http://www.w3.org/2001/XMLSchema#>  . 
+@prefix xsd:<http://www.w3.org/2001/XMLSchema#> #@todo initialize the dictionary with these prefixes. 
 
 test:Dog  a  owl:Class .  
 test:Small a owl:Class . 
@@ -13,7 +13,10 @@ test:Winston a  test:Dog ;
                          test:playsWith test:Penny ; 
                          test:hasAge "Adult" .
 
-test:Puppy a owl:Class . 
+test:Puppy a owl:Class ; 
+           rdfs:subClassOf [ a owl:Restriction ; 
+                              owl:onProperty test:hasAge ; 
+                              owl:hasValue "Young" ]
 
 test:hasAge a owl:DatatypeProperty ; 
             rdfs:domain test:Dog ; 

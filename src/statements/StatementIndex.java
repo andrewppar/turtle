@@ -5,18 +5,9 @@ import java.util.* ;
 public class StatementIndex { 
   public LinkedList<Statement> store ; 
   // @todo investigate if the footprint of two indexes is too much
-  public  HashMap<Integer,HashMap<String,LinkedList<Statement>>> index  ; 
+  public HashMap<Integer,HashMap<String,LinkedList<Statement>>> index  ; 
   public HashMap<String,HashMap<String,LinkedList<String>>>  predicateObjectIndex ; 
-
-  //  public void main (String [] args) { 
-  //    StatementIndex index = new StatementIndex () ; 
-  //    System.out.println ("Initializing Statement Store...") ; 
-  //    index.initializeStore () ; 
-  //    System.out.println ("Statement Store Initialized") ; 
-  //    System.out.println("Initializing Statement Index...") ; 
-  //    index.initializeIndex () ; 
-  //    System.out.println("Statement Index Initialized") ; 
-  //  }
+  public HashMap<CompositeEntity,String> compositeEntityIndex ;
 
   public void initialize () { 
     System.out.println ("Initializing Statement Store...") ; 
@@ -25,6 +16,9 @@ public class StatementIndex {
     System.out.println("Initializing Statement Index...") ; 
     this.initializeIndex () ; 
     System.out.println("Statement Index Initialized") ; 
+    System.out.println("Initializing Composite Object Index...") ; 
+    this.initializeCompositeEntityIndex() ; 
+    System.out.println("Composite Object Index Initialized") ; 
     System.out.println("") ;
   }
 
@@ -48,6 +42,10 @@ public class StatementIndex {
     this.store = new LinkedList<Statement> () ; 
   }
 
+  private void initializeCompositeEntityIndex (){ 
+    this.compositeEntityIndex = new HashMap<CompositeEntity,String> () ; 
+  }
+
   public Boolean addStatement (Statement state) {
     //Only update if we don't already have statement
     //return value is whether we updated
@@ -67,7 +65,7 @@ public class StatementIndex {
       update_inner_index(object_index,object,state) ; 
       this.update_predicate_index(subject,predicate,object) ;
       return true ;
-    }
+    } 
   }
 
   private void update_inner_index(HashMap<String,LinkedList<Statement>> inner_index, String item, Statement state) {
@@ -110,10 +108,20 @@ public class StatementIndex {
     }
   }
 
-
-
-
+  public String addCompositeEntity (CompositeEntity object)  {
+    //For now we are going to do the naive thing. Really we need
+    //to czer these object so that the same two objects don't 
+    //get different hashes. This is a @todo
+    // @return the hash to use for the composite object 
+    if ( this.compositeEntityIndex.containsKey(object))  {
+      return this.compositeEntityIndex.get(object)  ; 
+    }
+    else {
+      String uniqueID = "co:" + UUID.randomUUID().toString();
+      this.compositeEntityIndex.put(object, uniqueID) ; 
+      return uniqueID ; 
+    } 
+  } 
 }
-
 
 

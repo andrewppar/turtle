@@ -47,7 +47,7 @@ public class Printer {
       HashMap.Entry prefix_entry = (Map.Entry)prefix_iterator.next() ; 
       String prefix_key = ((String) prefix_entry.getValue ()) ; 
       String prefix_value = ((String) prefix_entry.getKey ()) ; 
-      System.out.println("prefix " + prefix_key + ":" + prefix_value + " . " ) ;
+      System.out.println("@prefix " + prefix_key + ":" + prefix_value + " . " ) ;
 
     }
     System.out.println(" ") ; 

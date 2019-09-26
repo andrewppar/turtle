@@ -3,6 +3,7 @@ import java.util.* ;
 public class ForwardInferenceEngine {
 
   public void performForwardInference  (StatementIndex  statement_index ) { 
+    System.out.println("Performing Forward Inference on statement index " + statement_index + " ..." ); 
     this.populateSubclasses(statement_index) ; 
 
   }
@@ -10,10 +11,11 @@ public class ForwardInferenceEngine {
 
   private static void populateSubclasses (StatementIndex statement_index) { 
     //Get all of  the  rdf:type statements
+    System.out.println("Populating Taxonomy ... ") ; 
     LinkedList<Statement> type_statements =  statement_index.index.get(2).get("a") ; 
     HashMap<String,HashMap<String,LinkedList<String>>> predicate_index  = statement_index.predicateObjectIndex ; 
-    if (predicate_index.containsKey("<http://www.w3.org/2002/07/owl#subClassOf>")) {
-      HashMap<String,LinkedList<String>> subject_object_dictionary = predicate_index.get("<http://www.w3.org/2002/07/owl#subClassOf>") ; 
+    if (predicate_index.containsKey("<http://www.w3.org/2000/01/rdf-schema#subClassOf>")) { // This needs to be rdfs:subClassOj
+      HashMap<String,LinkedList<String>> subject_object_dictionary = predicate_index.get("<http://www.w3.org/2000/01/rdf-schema#subClassOf>") ; 
 
       LinkedList<String> target_classes_surveyed = new LinkedList<String> () ; 
 //      System.out.println(type_statements) ;
@@ -44,13 +46,13 @@ public class ForwardInferenceEngine {
     classes_surveyed.add(target_class) ; 
     //Depth first Adding of statements
     HashMap<String,HashMap<String,LinkedList<String>>> predicate_index  = statement_index.predicateObjectIndex ; 
-    HashMap<String,LinkedList<String>> subject_object_dictionary = predicate_index.get("<http://www.w3.org/2002/07/owl#subClassOf>") ; 
+    HashMap<String,LinkedList<String>> subject_object_dictionary = predicate_index.get("<http://www.w3.org/2000/01/rdf-schema#subClassOf>") ; 
     Statement new_statement = new Statement () ; 
     new_statement.addArgs(subject, "a", target_class) ;
     //System.out.println(new_statement) ; 
     Boolean statement_added = statement_index.addStatement(new_statement) ; 
     //@todo handle looping taxonomies 
-    //System.out.println(subject_object_dictionary.containsKey(target_class)) ; 
+    //:ystem.out.println(subject_object_dictionary.containsKey(target_class)) ; 
     //System.out.println(statement_added) ; 
 
     if ( statement_added  && subject_object_dictionary.containsKey(target_class)) {
