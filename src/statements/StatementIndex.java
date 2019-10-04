@@ -7,7 +7,7 @@ public class StatementIndex {
   // @todo investigate if the footprint of two indexes is too much
   public HashMap<Integer,HashMap<String,LinkedList<Statement>>> index  ; 
   public HashMap<String,HashMap<String,LinkedList<String>>>  predicateObjectIndex ; 
-  public HashMap<CompositeEntity,String> compositeEntityIndex ;
+  public HashMap<String,CompositeEntity> compositeEntityIndex ;
 
   public void initialize () { 
     System.out.println ("Initializing Statement Store...") ; 
@@ -43,7 +43,7 @@ public class StatementIndex {
   }
 
   private void initializeCompositeEntityIndex (){ 
-    this.compositeEntityIndex = new HashMap<CompositeEntity,String> () ; 
+    this.compositeEntityIndex = new HashMap<String,CompositeEntity> () ; 
   }
 
   public Boolean addStatement (Statement state) {
@@ -113,15 +113,15 @@ public class StatementIndex {
     //to czer these object so that the same two objects don't 
     //get different hashes. This is a @todo
     // @return the hash to use for the composite object 
-    if ( this.compositeEntityIndex.containsKey(object))  {
-      return this.compositeEntityIndex.get(object)  ; 
+    String uniqueID = "co:" + UUID.randomUUID().toString();
+    if ( this.compositeEntityIndex.containsKey(uniqueID))  {
     }
     else {
-      String uniqueID = "co:" + UUID.randomUUID().toString();
-      this.compositeEntityIndex.put(object, uniqueID) ; 
-      return uniqueID ; 
+      this.compositeEntityIndex.put(uniqueID,object) ; 
     } 
+    return uniqueID ; 
   } 
+
 }
 
 

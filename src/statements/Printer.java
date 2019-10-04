@@ -1,5 +1,6 @@
 import java.util.* ;
 
+//@START we should print composite objects in a more verbose way. 
 
 public class Printer { 
 
@@ -22,7 +23,7 @@ public class Printer {
   // in Parser or StatementIndex. 
   //  
   private StatementIndex statement_index ; 
-
+  private int spaces_to_print ; 
   public void printIndex(StatementIndex statement_index)  { 
     ArrayList<String> prefix_uris = new ArrayList<String> ()  ; 
     prefix_uris = null ; 
@@ -60,12 +61,14 @@ public class Printer {
   } 
 
   private void printIndexInternals (StatementIndex statement_index, ArrayList<String> prefix_uris, HashMap<String,String> prefix_dictionary) { 
+    this.spaces_to_print = 0 ; 
     HashMap<String,LinkedList<Statement>> subject_index = statement_index.index.get(1); 
     Iterator subject_iterator = subject_index.entrySet().iterator() ; 
     while (subject_iterator.hasNext()) {
       //Looping through subjects
       HashMap.Entry subject_entry = (Map.Entry)subject_iterator.next() ; 
       String subject = ((String) subject_entry.getKey ()); 
+      this.spaces_to_print = (subject.length() + 1) ; 
       LinkedList<Statement> subject_indexed_statements = ((LinkedList<Statement>)subject_entry.getValue()) ; 
       HashMap predicate_index_for_subject = new HashMap<String,LinkedList<Statement>> () ; 
       //Populate the predicate_index_for_suject @todo put this in it's own method.
@@ -83,33 +86,32 @@ public class Printer {
           predicate_index_for_subject.put(pred,predicate_statements)  ; 
         } 
       } 
-      this.potentiallyPrintStringWithPrefixes(subject, prefix_uris, prefix_dictionary) ; 
-      int spaces = (subject.length() + 1) ; 
+      this.potentially_print_string_with_prefixes(subject, prefix_uris, prefix_dictionary, statement_index) ; 
       Iterator predicate_iterator = predicate_index_for_subject.entrySet().iterator() ; 
       int count = 0  ; 
       while (predicate_iterator.hasNext()) {
         //Looping through predicates
         HashMap.Entry predicate_entry =  (Map.Entry)predicate_iterator.next() ; 
         String predicate = ((String)predicate_entry.getKey()); 
-//        System.out.println("HERE") ; 
-//        System.out.println(predicate) ;
+        //        System.out.println("HERE") ; 
+        //        System.out.println(predicate) ;
         LinkedList<Statement> predicate_indexed_statements = ((LinkedList<Statement>)predicate_entry.getValue()); 
         if (count == 0 ) { 
-          this.potentiallyPrintStringWithPrefixes(predicate, prefix_uris, prefix_dictionary) ; 
+          this.potentially_print_string_with_prefixes(predicate, prefix_uris, prefix_dictionary, statement_index) ; 
         }
         else { 
-          System.out.format("%"+spaces+"s", ""); 
+          System.out.format("%"+spaces_to_print+"s", ""); 
           System.out.print(predicate + " ") ;
         } 
         for (int i = 0 ; i < predicate_indexed_statements.size(); i++) { 
           Statement statement = predicate_indexed_statements.get(i) ; 
           String object = statement.object ; 
           if ( i == 0 ) {
-            this.potentiallyPrintStringWithPrefixes(object, prefix_uris, prefix_dictionary) ; 
+            this.potentially_print_string_with_prefixes(object, prefix_uris, prefix_dictionary, statement_index) ; 
           }
           else {
             System.out.print(",") ;
-            this.potentiallyPrintStringWithPrefixes( object, prefix_uris, prefix_dictionary) ; 
+            this.potentially_print_string_with_prefixes( object, prefix_uris, prefix_dictionary, statement_index) ; 
           }
         }
         if (predicate_iterator.hasNext()) { 
@@ -126,7 +128,30 @@ public class Printer {
 
   }
 
-  private void potentiallyPrintStringWithPrefixes(String string_to_print, ArrayList<String> prefix_uris, HashMap<String,String> prefix_dictionary) {
+  private void potentially_print_string_with_prefixes(String string_to_print, ArrayList<String> prefix_uris, HashMap<String,String> prefix_dictionary, StatementIndex statement_index) {
+    if (string_is_composite_key(string_to_print)) { 
+      this.print_composite_entity(string_to_print, statement_index, this.spaces_to_print)  ; 
+    } 
+    else {
+      this.potentially_print_non_composite_entity_with_prefixes(string_to_print, prefix_uris, prefix_dictionary) ; 
+
+    }
+  }
+
+  private Boolean string_is_composite_key (String string_to_print) {
+    return string_to_print.matches("^co:.*");
+  }
+
+  private void print_composite_entity(String key, StatementIndex statement_index, int spaces) { 
+    CompositeEntity composite_entity = statement_index.compositeEntityIndex.get(key) ; 
+    //System.out.println(key) ; 
+    //System.out.println(statement_index.compositeEntityIndex) ; 
+    //System.out.println(composite_entity); 
+    //System.out.println(spaces) ; 
+    composite_entity.print(spaces) ; 
+  } 
+
+  private void potentially_print_non_composite_entity_with_prefixes(String string_to_print, ArrayList<String> prefix_uris, HashMap<String,String> prefix_dictionary) {
     if ( prefix_uris == null)  { 
       System.out.print(string_to_print + " ") ; 
     }

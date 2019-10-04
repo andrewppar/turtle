@@ -6,6 +6,15 @@ public class CompositeEntityStatement {
     this.predicate = predicate ; 
     this.object = object ;
     }
+
+  public void print() { 
+    System.out.print(this.predicate) ; 
+    System.out.print(" ") ; 
+    System.out.print(this.object) ; 
+    System.out.println(" ; ") ; 
+
+
+  }
 }
 
 

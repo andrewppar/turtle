@@ -12,7 +12,7 @@ public class Test {
     HashMap<String,LinkedList<Statement>> subject_index = statement_index.index.get(1) ; 
     HashMap<String,LinkedList<Statement>> predicate_index = statement_index.index.get(2) ; 
     HashMap<String,LinkedList<Statement>> object_index = statement_index.index.get(3) ; 
-    String ttl = trial.readFileToString("test.ttl") ; 
+    String ttl = trial.readFileToString("test_restriction.ttl") ; 
     Parser parser =  new Parser() ; 
     parser.parse(ttl,statement_index); 
 

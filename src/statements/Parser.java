@@ -2,9 +2,6 @@ import java.text.CharacterIterator ;
 import java.text.StringCharacterIterator ; 
 import java.util.* ; 
 
-
-// We have things working when there are no composite entities  When we do come across composite entities everything is broken.
-
 public class Parser {
   private HashMap<String,String> prefix_dictionary ; 
   private String prefix_key ; 
@@ -17,6 +14,7 @@ public class Parser {
   private Boolean uri_has_been_prefixed ; 
   private Boolean within_comment ; 
   private Boolean within_prefix_dictionary_entry ; 
+  private String  spaces_to_print ; 
   //Composite Objects
   private Boolean within_composite_entity ; 
   private CompositeEntity current_composite_entity ; 
@@ -36,6 +34,8 @@ public class Parser {
     this.within_prefix=false; 
     this.uri_has_been_prefixed = false;
     this.within_prefix_dictionary_entry = false ; 
+    this.spaces_to_print = "" ; 
+    // @todo use this to print restrictions reasonably
     //Composite Entity 
     this.within_composite_entity  = false ; 
     this.current_composite_predicate = "" ; 
@@ -43,22 +43,25 @@ public class Parser {
     this.current_composite_entity  = new CompositeEntity () ;
     while ( iterator.current() != CharacterIterator.DONE ) { 
       Character character = iterator.current() ; 
-//      System.out.println("NEXT");
-//      System.out.println(character) ; 
-//      System.out.println("current_item") ; 
-//      System.out.println(this.current_item)  ; 
-//      System.out.println("current_subject")  ; 
-//      System.out.println(this.current_subject)  ; 
-//      System.out.println("current_predicate"); 
-//      System.out.println(this.current_predicate); 
-//      System.out.println("current_object")  ; 
-//      System.out.println(this.current_object)  ; 
-//      System.out.println("within_uri" ) ; 
-//      System.out.println(this.within_uri) ; 
-//      System.out.println("prefix_key"); 
-//      System.out.println(this.prefix_key) ;
-//      System.out.println("within_prefix") ; 
-//      System.out.println(this.within_prefix) ;
+      //System.out.println("NEXT");
+      //System.out.println(character) ; 
+      //System.out.println("current_item") ; 
+      //System.out.println(this.current_item)  ; 
+      //System.out.println("current_subject")  ; 
+      //System.out.println(this.current_subject)  ; 
+      //System.out.println("current_predicate"); 
+      //System.out.println(this.current_predicate); 
+      //System.out.println("current_object")  ; 
+      //System.out.println(this.current_object)  ; 
+      //System.out.println("within_uri" ) ; 
+      //System.out.println(this.within_uri) ; 
+      //System.out.println("prefix_key"); 
+      //System.out.println(this.prefix_key) ;
+      //System.out.print("within_prefix    ") ; 
+      //System.out.println(this.within_prefix) ;
+      //System.out.println("within_composite_entity " + this.within_composite_entity) ;
+      //System.out.println(this.current_composite_predicate) ; 
+      //System.out.println(this.current_composite_object) ; 
       if ( this.within_comment ) { 
         //System.out.println("in  comment") ; 
         this.potentially_update_comment_state(character)  ; 
@@ -83,6 +86,10 @@ public class Parser {
       else {
         if (character == ']') {
           //System.out.println("Finished Composite Object"); 
+          //System.out.println(this.current_composite_predicate) ; 
+          //System.out.println(this.current_composite_object) ; 
+          //System.out.println(this.current_composite_entity) ;  
+          this.current_composite_entity.updateCompositeEntityArgs(this.current_composite_predicate, this.current_composite_object) ; 
           String composite_id = this.store_composite_entity(this.current_composite_entity, statement_index) ; 
           this.current_item = composite_id ; 
           this.current_object = this.current_item ;
@@ -108,6 +115,7 @@ public class Parser {
           this.end_statement(character, statement_index) ; 
         }
         else if (character == ',') { 
+          //System.out.println("Comma") ;
           this.end_statement(character, statement_index) ; 
         } 
         else if (character == '.') { 
@@ -127,10 +135,11 @@ public class Parser {
           }
         }
         else {
-          if (!(this.within_composite_entity)) { //It is pretty obscure why this has been added, document this bro.
-            this.within_prefix = true  ; 
-          }
+         // if (!(this.within_composite_entity)) { //It is pretty obscure why this has been added, document this bro.
+         //   this.within_prefix = true  ; 
+         // }
 
+          this.within_prefix = true ; 
           this.current_item=this.current_item + character ; 
         }
       } 
@@ -197,11 +206,15 @@ public class Parser {
 
 
   private void update_parser_with_uri (Character character, StatementIndex statement_index)  { 
-    //System.out.println(this.current_item) ;
     if (this.within_composite_entity) {
+      //System.out.println("Updating Parser") ; 
+      //System.out.println(this.current_item) ;
+      //System.out.println(this.current_composite_predicate) ; 
+      //System.out.println(this.current_composite_object) ; 
       if (this.current_composite_predicate.equals("")) {
         //System.out.println(this.current_subject) ;
         //System.out.println("Adding Composite Predicate") ; 
+        //System.out.println(this.current_item) ; 
         this.current_composite_predicate = this.current_item  ;
         this.current_item = "" ; 
       }
@@ -213,8 +226,10 @@ public class Parser {
       }
       else { 
         // Add composite statement to object
-        this.current_composite_entity.updateCompositeEntityArgs(this.current_composite_object, this.current_composite_object) ; 
+        this.current_composite_entity.updateCompositeEntityArgs(this.current_composite_predicate, this.current_composite_object) ; 
         //System.out.println("Composite Statement added to composite entity") ; 
+        //System.out.println(this.current_composite_predicate) ; 
+        //System.out.println(this.current_composite_object) ; 
         this.current_composite_predicate = "" ; 
         this.current_composite_object = "" ; 
       } 
@@ -281,8 +296,9 @@ public class Parser {
       this.within_prefix = false ; 
       this.current_item = "" ; 
     }
-    else if (character == ' ' ) { 
+    else if (character == ' ' || character == ',' ) { // maybe this --> || character == ';' ) { 
       //System.out.println("space case") ;
+      //System.out.println(this.uri_has_been_prefixed) ; 
       if (this.uri_has_been_prefixed) {
         this.current_item = this.current_item  + '>' ; // if this was generated from a prefix there's no > to read
         this.uri_has_been_prefixed = false ;
@@ -306,7 +322,7 @@ public class Parser {
         this.current_composite_predicate = entry ; 
       }
       else if  (this.current_composite_object == "") { 
-        this.current_composite_predicate = entry ;
+        this.current_composite_object = entry ;
 
       }
       else { 
@@ -350,6 +366,9 @@ public class Parser {
     }
 
     private void end_composite_statement () {
+      //System.out.println("Ending Composite Statement") ; 
+      //System.out.println(this.current_composite_predicate) ; 
+      //System.out.println(this.current_composite_object) ; 
       CompositeEntityStatement composite_statement = new CompositeEntityStatement () ; 
       String pred = this.current_composite_predicate ; 
       String obj  = this.current_composite_object ; 
@@ -359,11 +378,13 @@ public class Parser {
     }
 
     private void end_atomic_statement (Character character, StatementIndex statement_index) { 
-      //This needs to be sensitive to being within a composite object @start
       String subject = this.current_subject ; 
       String predicate = this.current_predicate ; 
       String object = this.current_object ; 
       String composite_predicate = this.current_composite_predicate  ; 
+      //System.out.println(this.current_subject) ; 
+      //System.out.println(this.current_predicate) ; 
+      //System.out.println(this.current_object) ; 
       if ( this.within_composite_entity ) { 
         this.index_store_predicate_arguments_for_complex_object(current_predicate, object) ; 
       } else  { 
@@ -380,6 +401,7 @@ public class Parser {
         }
       }
       else if ( character == ',' ) { 
+        //System.out.println("More Comma") ; 
         if ( this.within_composite_entity ) { 
 
         } else {
@@ -417,6 +439,7 @@ public class Parser {
     }
 
     private static String  store_composite_entity(CompositeEntity composite_entity, StatementIndex statement_index) { 
+
       return statement_index.addCompositeEntity(composite_entity) ; 
     }
 

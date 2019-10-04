@@ -1,4 +1,4 @@
-@prefix : <http://example.org/voc#> .
+@prefix voc: <http://example.org/voc#> .
 @prefix ex: <http://example.org/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -7,54 +7,60 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 
-: a owl:Ontology .
+voc: a owl:Ontology .
 #: owl:imports <http://xmlns.com/foaf/0.1/> .
 
 # Classes
 
+<http://marcus> a voc:FullProfessor . 
+
 foaf:Person a owl:Class .
 
-:Teacher rdfs:subClassOf foaf:Person .
-:ExternalTeacher rdfs:subClassOf :Teacher .
+voc:Teacher rdfs:subClassOf foaf:Person .
+voc:ExternalTeacher rdfs:subClassOf voc:Teacher .
 
-:Researcher rdfs:subClassOf foaf:Person .
+voc:Researcher rdfs:subClassOf foaf:Person .
 
-:Student rdfs:subClassOf foaf:Person .
-:UndergraduateStudent rdfs:subClassOf :Student .
-:GraduateStudent rdfs:subClassOf :Student,
-   [ a owl:Restriction ;
-        owl:onProperty :isSupervisedBy ;
-             owl:someValuesFrom :Professor ] .
-             :PhDStudent rdfs:subClassOf :GraduateStudent, :Researcher .
+voc:Student rdfs:subClassOf foaf:Person .
+            
+            voc:UndergraduateStudent rdfs:subClassOf voc:Student .
 
-             :PostDoc rdfs:subClassOf :Researcher .
-             :Professor rdfs:subClassOf :Researcher, :Teacher .
-             :FullProfessor rdfs:subClassOf :Professor .
-             :AssociateProfessor rdfs:subClassOf :Professor .
-             :AssistantProfessor rdfs:subClassOf :Professor .
 
-             :Course a owl:Class .
+            voc:GraduateStudent rdfs:subClassOf voc:Student,  [ a owl:Restriction ;
+                                                                  owl:onProperty voc:isSupervisedBy ;
+                                                                  owl:someValuesFrom voc:Professor ] .
+           
+            voc:PhDStudent rdfs:subClassOf voc:GraduateStudent, voc:Researcher .
+
+             voc:PostDoc rdfs:subClassOf voc:Researcher .
+             voc:Professor rdfs:subClassOf voc:Researcher, voc:Teacher .
+             voc:FullProfessor rdfs:subClassOf voc:Professor .
+             voc:AssociateProfessor rdfs:subClassOf voc:Professor .
+             voc:AssistantProfessor rdfs:subClassOf voc:Professor .
+
+             voc:Course a owl:Class .
 
              # Properties
 
              foaf:firstName rdf:type owl:DatatypeProperty ;
                             rdfs:domain foaf:Person ;
-                                           rdfs:range rdfs:Literal .
-                                                       
-                                           foaf:lastName rdf:type owl:DatatypeProperty ;
-                                                         rdfs:domain foaf:Person ;
-                                                                       rdfs:range rdfs:Literal .
-
-                                                                       :teaches a owl:ObjectProperty ; 
-                                                                            rdfs:domain :Teacher ;
-                                                                                    rdfs:range :Course .    
-
-                                                                                    :isTaughtBy owl:inverseOf :teaches .
-
-                                                                                    :givesLecture rdfs:subPropertyOf :teaches .
-                                                                                    :givesLab rdfs:subPropertyOf :teaches .
-
-                                                                                    :title a owl:DatatypeProperty ;
-                                                                                        rdfs:range xsd:string .
-
-                                                                                        :isSupervisedBy a owl:ObjectProperty .
+                            rdfs:range rdfs:Literal .  
+             
+             foaf:lastName rdf:type owl:DatatypeProperty ;
+                            rdfs:domain foaf:Person ;
+                            rdfs:range rdfs:Literal .  
+                            
+            voc:teaches a owl:ObjectProperty ; 
+                        rdfs:domain voc:Teacher ;
+                        rdfs:range voc:Course .    
+                        
+          voc:isTaughtBy owl:inverseOf voc:teaches .  
+          
+          voc:givesLecture rdfs:subPropertyOf voc:teaches .
+        
+          voc:givesLab rdfs:subPropertyOf voc:teaches .  
+          
+          voc:title a owl:DatatypeProperty ;
+                    rdfs:range xsd:string .  
+                    
+          voc:isSupervisedBy a owl:ObjectProperty .
