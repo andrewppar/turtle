@@ -1,3 +1,5 @@
+import java.util.* ; 
+
 public class Statement { 
 
   public String subject ; 
@@ -25,6 +27,30 @@ public class Statement {
     String object    = this.object ; 
     System.out.println(subject + " " + predicate + " " + object + ".") ; 
   }
+
+  public boolean containsLessVars(Statement statement) { 
+    if (this.variableCount() < statement.variableCount()) {
+      return true ; 
+    } else { 
+      return false ; 
+    } 
+  }
+
+  private int variableCount () { 
+    ArrayList<String> entities  = new ArrayList<String> (Arrays.asList(this.subject,this.predicate, this.object)) ; 
+    int count = 0 ; 
+    for (int i = 0 ; i < entities.size() ; i++) { 
+      if (isVariable(entities.get(i))) { 
+        count = count + 1 ; 
+      } 
+    } 
+    return count ; 
+  }
+
+  public static boolean isVariable (String potential_variable) {  // @todo generalize this for every object, not just string
+    return  potential_variable.matches("\\?[a-zA-Z1-9]+")  ;
+  }
+
 
   @Override
   public boolean equals (Object o) { 

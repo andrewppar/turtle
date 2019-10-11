@@ -12,13 +12,15 @@ public class Test {
     HashMap<String,LinkedList<Statement>> subject_index = statement_index.index.get(1) ; 
     HashMap<String,LinkedList<Statement>> predicate_index = statement_index.index.get(2) ; 
     HashMap<String,LinkedList<Statement>> object_index = statement_index.index.get(3) ; 
-    String ttl = trial.readFileToString("test_restriction.ttl") ; 
+    String ttl = trial.readFileToString("test.ttl") ; 
     Parser parser =  new Parser() ; 
     parser.parse(ttl,statement_index); 
 
     ArrayList<String> prefix_statements = new ArrayList<String> () ;
     prefix_statements.add("test:<http://test.com/>") ;
+    prefix_statements.add("voc:<http://example.org/voc#>") ; 
     prefix_statements.add("owl:<http://www.w3.org/2002/07/owl#>") ; 
+    prefix_statements.add("rdfs:<http://www.w3.org/2000/01/rdf-schema#>") ;
 
 //    System.out.println(subject_index) ; 
 //    LinkedList<Statement> winnie = subject_index.get("<http://test.com/Dog>") ; 
@@ -29,8 +31,8 @@ public class Test {
 //    }
 
         
-    Printer printer = new Printer () ; 
-    printer.printIndexWithPrefixes(statement_index,prefix_statements) ; 
+//    Printer printer = new Printer () ; 
+//    printer.printIndexWithPrefixes(statement_index,prefix_statements) ; 
 
     
 
@@ -40,7 +42,7 @@ public class Test {
 //
 //
 //
-    printer.printIndexWithPrefixes(statement_index,prefix_statements) ; 
+//    printer.printIndexWithPrefixes(statement_index,prefix_statements) ; 
     //System.out.println(subject_index) ; 
     //System.out.println(predicate_index) ; 
     //System.out.println(object_index) ; 
@@ -57,6 +59,10 @@ public class Test {
     // "<http://test.com/Cat> a <http://owl/Class>;  <http:label.com> <http://alabel> ."
 
     //"<http://ttl.one> <http://ttl.pred> <http://ttl.obj>; <http://ttl.pred_two> <http://ttl.obj_two>. <http://ttl.stwo> <http://ttl.pred> <http://ttl:cat>, <http://ttl:feline>."
+    //
+    QueryEngine q_engine = new QueryEngine () ; 
+    q_engine.lookupQuery("<http://test.com/Penny> ?property ?thing .  ", statement_index) ;
+
 
 
 

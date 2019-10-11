@@ -1,7 +1,4 @@
 import java.util.* ;
-
-//@START we should print composite objects in a more verbose way. 
-
 public class Printer { 
 
   // For now this doesn't have any slots
@@ -62,7 +59,10 @@ public class Printer {
 
   private void printIndexInternals (StatementIndex statement_index, ArrayList<String> prefix_uris, HashMap<String,String> prefix_dictionary) { 
     this.spaces_to_print = 0 ; 
+    //System.out.println(statement_index) ;
+    //System.out.println(prefix_uris) ; 
     HashMap<String,LinkedList<Statement>> subject_index = statement_index.index.get(1); 
+    //System.out.println(subject_index) ; 
     Iterator subject_iterator = subject_index.entrySet().iterator() ; 
     while (subject_iterator.hasNext()) {
       //Looping through subjects
@@ -152,34 +152,48 @@ public class Printer {
   } 
 
   private void potentially_print_non_composite_entity_with_prefixes(String string_to_print, ArrayList<String> prefix_uris, HashMap<String,String> prefix_dictionary) {
+    //System.out.println("String: " + string_to_print) ;
+    //System.out.println("Printing Prefixes"); 
     if ( prefix_uris == null)  { 
+      //System.out.println("Nothing to printout") ;
       System.out.print(string_to_print + " ") ; 
     }
     else {  
       String longest_prefix_match = new String () ; 
       longest_prefix_match = "" ;
+      //System.out.println("Checking for prefix") ;
       for (int i = 0 ; i < prefix_uris.size() ; i++) {
-        String potential_prefix = prefix_uris.get(i) ; 
+
+        String potential_prefix_uri = prefix_uris.get(i) ; 
+        String potential_prefix = potential_prefix_uri.substring(0, potential_prefix_uri.length() - 1); 
+        //System.out.println("Potential Prefix: " + potential_prefix) ; 
+        //System.out.println("Current Contender " + longest_prefix_match) ; 
+        //System.out.println(string_to_print.indexOf(potential_prefix) == 0) ; 
+        //System.out.println(string_to_print.indexOf(potential_prefix)) ; 
         if ( string_to_print.indexOf(potential_prefix) == 0 ) {
           if ( longest_prefix_match.length() < potential_prefix.length () ) { 
             longest_prefix_match = potential_prefix  ;
+
           }
         }
       }
+      //System.out.println(longest_prefix_match) ; 
       if ( longest_prefix_match == "" ) { 
+        //System.out.println("No matches") ;
         System.out.print(string_to_print + " " ) ; 
       }
       else { 
         String result_string_with_carat = new String () ;
         String result_string = new String () ;
-        String prefix = prefix_dictionary.get(longest_prefix_match) ; 
+        String prefix = prefix_dictionary.get(longest_prefix_match + ">") ; 
         //      System.out.println("longest_prefix_match") ; 
         //      System.out.println(longest_prefix_match) ; 
         //      System.out.println("prefix") ; 
         //      System.out.println(prefix) ; 
 
         result_string_with_carat = string_to_print.replace(longest_prefix_match, (prefix + ":"))  ; 
-        result_string = result_string_with_carat.substring(0 , result_string_with_carat.length() - 1) ;
+        result_string = result_string_with_carat.substring(0 , result_string_with_carat.length() - 1) ; 
+        //System.out.println("Found Match " + result_string) ; 
 
         System.out.print(result_string + " ") ; 
       } 

@@ -26,6 +26,19 @@ public class StatementIndex {
     return this.store.size()  ; 
   }
 
+  public Statement statementWithFewestVars () {
+    LinkedList<Statement> store = this.store ; 
+    Statement statement_with_least_vars = new Statement () ; 
+    for ( int i = 0 ; i < store.size()  ; i++) { 
+      if (i == 0) { 
+        statement_with_least_vars = store.get(i) ; 
+      } else if (store.get(i).containsLessVars(statement_with_least_vars)) {
+        statement_with_least_vars = store.get(i) ; 
+      } 
+    } 
+    return statement_with_least_vars ; 
+  }
+
   private void initializeIndex () { 
     this.index = new HashMap<Integer,HashMap<String,LinkedList<Statement>>> () ; 
     this.predicateObjectIndex = new HashMap<String,HashMap<String,LinkedList<String>>>  () ; 

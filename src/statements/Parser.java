@@ -29,6 +29,10 @@ public class Parser {
     this.current_predicate = ""; 
     this.current_item    = ""; 
     this.prefix_dictionary = new  HashMap<String,String> () ; 
+    this.prefix_dictionary.put("owl","<http://www.w3.org/2002/07/owl#>") ; 
+    this.prefix_dictionary.put("rdfs","<http://www.w3.org/2000/01/rdf-schema#>") ;
+
+
     this.within_comment    = false ; 
     this.within_uri =false  ;
     this.within_prefix=false; 
